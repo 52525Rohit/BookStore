@@ -10,7 +10,7 @@ function Freebook() {
   useEffect(() => {
     const getBook = async () => {
       try {
-        const res = await axios.get("https://bookstore-backend1-qeml.onrender.com");
+        const res = await axios.get("https://bookstore-g1p7.onrender.com");
         const data = res.data.filter((data) => data.category === "Free");
         setBook(data);
         console.log(data);
