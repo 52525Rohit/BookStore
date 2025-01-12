@@ -8,7 +8,7 @@ function Books() {
   useEffect(() => {
     const getBook = async () => {
       try {
-        const res = await axios.get("https://bookstore-backend1-qeml.onrender.com");
+        const res = await axios.get("https://bookstore-g1p7.onrender.com");
         console.log(res.data);
         setBook(res.data);
       } catch (error) {
