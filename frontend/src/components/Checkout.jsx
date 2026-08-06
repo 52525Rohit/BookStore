@@ -61,6 +61,10 @@ function Checkout() {
       toast.error("Please select a delivery address");
       return;
     }
+    if (!window.Razorpay) {
+      toast.error("Payment gateway failed to load. Check your connection and try again.");
+      return;
+    }
     setPlacingOrder(true);
     try {
       const orderRes = await axios.post(`${API}/order/create`, {
@@ -71,17 +75,51 @@ function Checkout() {
       const paymentRes = await axios.post(`${API}/payment/initiate`, {
         orderId: order._id,
       });
-      await axios.post(`${API}/payment/callback`, {
-        orderId: order._id,
-        paymentId: paymentRes.data.paymentId,
-        status: "success",
-      });
+      const { razorpayOrderId, amount, currency, keyId } = paymentRes.data;
 
-      toast.success("Order placed successfully!");
-      navigate(`/orders/${order._id}`);
+      const rzp = new window.Razorpay({
+        key: keyId,
+        amount,
+        currency,
+        order_id: razorpayOrderId,
+        name: "BookStore",
+        description: `Order #${order._id}`,
+        handler: async (response) => {
+          try {
+            await axios.post(`${API}/payment/callback`, {
+              orderId: order._id,
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
+            toast.success("Order placed successfully!");
+            navigate(`/orders/${order._id}`);
+          } catch (err) {
+            toast.error(err.response?.data?.message || "Payment verification failed");
+            navigate(`/orders/${order._id}`);
+          } finally {
+            setPlacingOrder(false);
+          }
+        },
+        modal: {
+          ondismiss: () => {
+            setPlacingOrder(false);
+            toast.error("Payment cancelled");
+          },
+        },
+        prefill: {
+          name: addresses.find((a) => a._id === selectedAddressId)?.fullname,
+          contact: addresses.find((a) => a._id === selectedAddressId)?.phone,
+        },
+        theme: { color: "#1d4ed8" },
+      });
+      rzp.on("payment.failed", () => {
+        setPlacingOrder(false);
+        toast.error("Payment failed. Please try again.");
+      });
+      rzp.open();
     } catch (err) {
       toast.error(err.response?.data?.message || "Couldn't place order");
-    } finally {
       setPlacingOrder(false);
     }
   };
@@ -238,7 +276,7 @@ function Checkout() {
               {placingOrder ? "Placing order..." : "Place Order & Pay"}
             </button>
             <p className="text-xs text-gray-400 mt-2 text-center">
-              Simulated payment — no real charge will be made.
+              Secure payment powered by Razorpay.
             </p>
           </div>
         </div>
