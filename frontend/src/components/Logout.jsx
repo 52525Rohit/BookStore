@@ -1,4 +1,4 @@
-import React from "react";
+import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,19 +8,16 @@ function Logout() {
   const navigate = useNavigate();
   const from = location.state?.from?.pathname || "/";
 
-  const [authUser, setAuthUser] = useAuth();
+  const { setAuthUser, setToken } = useAuth();
   const handleLogout = () => {
     try {
-      setAuthUser({
-        ...authUser,
-        user: null,
-      });
+      setAuthUser(undefined);
+      setToken(undefined);
       localStorage.removeItem("Users");
       toast.success("Logout successfully");
       navigate(from, { replace: true });
-
       setTimeout(() => {
-        window.location.reload();
+        // window.location.reload(); // This is no longer necessary
       }, 3000);
     } catch (error) {
       toast.error("Error: " + error);

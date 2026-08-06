@@ -1,14 +1,14 @@
-import React from "react";
 import { FaEnvelope, FaMapMarkerAlt, FaPhone } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import toast from "react-hot-toast";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
 
 function Contact() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm();
 
@@ -22,13 +22,14 @@ function Contact() {
     try {
       await axios.post("https://api.web3forms.com/submit", userInfo);
       toast.success("Message sent successfully");
-    } catch (error) {
+    } catch {
       toast.error("An error occurred");
     }
   };
   return (
     <div>
-      <div className="bg-gray-50 min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <Navbar />
+      <div className="bg-gray-50 min-h-screen flex items-center justify-center pt-28 pb-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl w-full space-y-8 bg-white p-10 rounded-lg shadow-lg">
           <div className="text-center">
             <h2 className="text-3xl font-extrabold text-gray-900">
@@ -114,6 +115,7 @@ function Contact() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

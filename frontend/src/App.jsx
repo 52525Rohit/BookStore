@@ -1,4 +1,3 @@
-import React from "react";
 import Home from "./Home/Home";
 
 import { Navigate, Route, Routes } from "react-router-dom";
@@ -9,10 +8,13 @@ import { Toaster } from "react-hot-toast";
 import { useAuth } from "./context/AuthProvider";
 import Login from "./components/Login";
 import About from "./components/About";
+import Cart from "./components/Cart";
+import Checkout from "./components/Checkout";
+import OrderConfirmation from "./components/OrderConfirmation";
+import OrderHistory from "./components/OrderHistory";
 
 function App() {
-  const [authUser, setAuthUser] = useAuth();
-  console.log(authUser);
+  const { authUser } = useAuth();
   return (
     <>
       <div className="dark:bg-slate-900 dark:text-white">
@@ -27,8 +29,24 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
+          <Route
+            path="/cart"
+            element={authUser ? <Cart /> : <Navigate to="/signup" />}
+          />
+          <Route
+            path="/checkout"
+            element={authUser ? <Checkout /> : <Navigate to="/signup" />}
+          />
+          <Route
+            path="/orders"
+            element={authUser ? <OrderHistory /> : <Navigate to="/signup" />}
+          />
+          <Route
+            path="/orders/:orderId"
+            element={authUser ? <OrderConfirmation /> : <Navigate to="/signup" />}
+          />
         </Routes>
-        <Toaster />
+        <Toaster className="dark:bg-slate-900 dark:text-white" />
       </div>
     </>
   );

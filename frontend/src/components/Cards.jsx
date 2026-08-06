@@ -1,6 +1,29 @@
-import React from "react";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthProvider";
 
 function Card({ item }) {
+  const { authUser } = useAuth();
+  const navigate = useNavigate();
+
+  const handleBuyNow = async () => {
+    if (!authUser) {
+      toast.error("Please login to add items to your cart");
+      navigate("/signup");
+      return;
+    }
+    try {
+      await axios.post(`${import.meta.env.VITE_API_URL}/cart/add`, {
+        bookId: item._id,
+        quantity: 1,
+      });
+      toast.success(`Added "${item.name}" to your cart`);
+      navigate("/cart");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Couldn't add to cart");
+    }
+  };
   return (
     <>
       <div className="mt-4 my-3 p-3">
@@ -16,9 +39,13 @@ function Card({ item }) {
             <p>{item.title}</p>
             <div className="card-actions justify-between">
               <div className="badge badge-outline">&#8377;{item.price}</div>
-              <div className="cursor-pointer px-3 py-2 rounded-full border-[2px] hover:bg-pink-900 hover:text-white duration-200">
+              <button
+                type="button"
+                onClick={handleBuyNow}
+                className="cursor-pointer px-3 py-2 rounded-full border-[2px] hover:bg-pink-900 hover:text-white duration-200"
+              >
                 Buy Now
-              </div>
+              </button>
             </div>
           </div>
         </div>

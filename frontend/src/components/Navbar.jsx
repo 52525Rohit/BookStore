@@ -1,16 +1,24 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Login from "./Login";
 import Logout from "./Logout";
 import { useAuth } from "../context/AuthProvider";
 
 function Navbar() {
-  const [authUser, setAuthUser] = useAuth();
+  const { authUser } = useAuth();
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
+  const handleSearch = (e) => {
+    e.preventDefault();
+    navigate(`/books?search=${encodeURIComponent(searchQuery.trim())}`);
+  };
   const [theme, setTheme] = useState(
-    localStorage.getItem("theme") ? localStorage.getItem("theme") : "light"
+    localStorage.getItem("theme") ? localStorage.getItem("theme") : "light",
   );
   const element = document.documentElement;
   useEffect(() => {
+    element.setAttribute("data-theme", theme);
     if (theme === "dark") {
       element.classList.add("dark");
       localStorage.setItem("theme", "dark");
@@ -45,6 +53,18 @@ function Navbar() {
         <a href="/books">Books</a>
       </li>
 
+      {authUser && (
+        <li className="hover:text-blue-700">
+          <a href="/cart">Cart</a>
+        </li>
+      )}
+
+      {authUser && (
+        <li className="hover:text-blue-700">
+          <a href="/orders">Orders</a>
+        </li>
+      )}
+
       <li className="hover:text-blue-700">
         <a href="/contact">Contact</a>
       </li>
@@ -56,13 +76,11 @@ function Navbar() {
   return (
     <>
       <div
-        className={`max-w-screen-2xl container mx-auto md:px-20 px-4 dark:bg-slate-900 dark:text-white fixed top-0 left-0 right-0 z-50 ${
-          sticky
-            ? "sticky-navbar shadow-md bg-base-300 dark:bg-slate-700 dark:text-white  duration-300 transition-all ease-in-out"
-            : ""
+        className={`w-full fixed top-0 left-0 right-0 z-50 bg-white dark:bg-slate-900 dark:text-white transition-shadow duration-300 ease-in-out ${
+          sticky ? "shadow-md" : ""
         }`}
       >
-        <div className="navbar">
+        <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 navbar">
           <div className="navbar-start">
             <div className="dropdown">
               <div
@@ -99,25 +117,31 @@ function Navbar() {
               <ul className="menu menu-horizontal px-1">{navItems}</ul>
             </div>
             <div className="hidden md:block">
-              <label className="px-3 py-2 border rounded-md flex items-center gap-2">
-                <input
-                  type="text"
-                  className="grow outline-none dark:bg-slate-900 dark:text-white"
-                  placeholder="Search"
-                />
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 16 16"
-                  fill="currentColor"
-                  className="h-4 w-4 opacity-70"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
-                    clipRule="evenodd"
+              <form onSubmit={handleSearch}>
+                <label className="px-3 py-2 border rounded-md flex items-center gap-2">
+                  <input
+                    type="text"
+                    className="grow outline-none dark:bg-slate-900 dark:text-white"
+                    placeholder="Search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
-                </svg>
-              </label>
+                  <button type="submit" aria-label="Search">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                      className="h-4 w-4 opacity-70"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </button>
+                </label>
+              </form>
             </div>
             <label className="swap swap-rotate">
               {/* this hidden checkbox controls the state */}
