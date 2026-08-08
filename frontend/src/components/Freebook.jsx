@@ -16,7 +16,7 @@ function Freebook() {
     return <div>Loading...</div>;
   }
   if (error) {
-    return <div>Error loading books: {error.message}</div>;
+    return null;
   }
 
   return (

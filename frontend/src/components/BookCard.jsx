@@ -11,9 +11,7 @@ function BookCard({ item }) {
   const handleAddToCart = async (book) => {
     if (!authUser) {
       toast.error("Please login to add items to your cart.");
-
       navigate("/signup");
-
       return;
     }
 
@@ -26,7 +24,6 @@ function BookCard({ item }) {
       toast.success(response.data.message || "Book added to cart!");
     } catch (error) {
       console.error(error);
-
       toast.error(error.response?.data?.message || "Could not add to cart.");
     }
   };
@@ -42,9 +39,14 @@ function BookCard({ item }) {
       </figure>
 
       <div className="card-body p-4">
-        <h2 className="card-title">
-          {item.name}
-          <div className="badge badge-secondary">{item.category}</div>
+        {/* flex-wrap + items-start yahan add kiya, aur badge ko flex-shrink-0 diya
+            taaki lamba title 2 lines mein wrap ho to badge overlap na kare,
+            balki apni jagah properly niche/side mein settle ho jaye */}
+        <h2 className="card-title flex flex-wrap items-start gap-2">
+          <span className="flex-1 min-w-0">{item.name}</span>
+          <div className="badge badge-secondary shrink-0 whitespace-nowrap">
+            {item.category}
+          </div>
         </h2>
 
         <p className="text-sm">{item.title}</p>

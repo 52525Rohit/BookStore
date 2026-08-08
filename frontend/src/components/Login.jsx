@@ -13,6 +13,7 @@ function Login() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
@@ -30,6 +31,7 @@ function Login() {
           setAuthUser(res.data.user);
           setToken(res.data.token);
           localStorage.setItem("Users", JSON.stringify(res.data.user));
+          reset();
           navigate(from, { replace: true });
           setTimeout(() => {
             document.getElementById("my_modal_3").close();
@@ -53,7 +55,10 @@ function Login() {
             <Link
               to="/"
               className="btn btn-sm btn-circle btn-ghost absolute right-3 top-3"
-              onClick={() => document.getElementById("my_modal_3").close()}
+              onClick={() => {
+                reset();
+                document.getElementById("my_modal_3").close();
+              }}
             >
               ✕
             </Link>
