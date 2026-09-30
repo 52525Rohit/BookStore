@@ -4,7 +4,7 @@ import axios from "axios";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 
-const API = import.meta.env.VITE_API_URL;
+import { API } from "../api";
 
 function OrderHistory() {
   const [orders, setOrders] = useState([]);

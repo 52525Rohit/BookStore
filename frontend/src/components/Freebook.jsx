@@ -12,10 +12,7 @@ function Freebook() {
     (item) => item.category === "Free",
   );
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-  if (error) {
+  if (loading || error) {
     return null;
   }
 

@@ -1,19 +1,15 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { API } from "../api";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Login from "./Login";
 import toast from "react-hot-toast";
-import { useAuth } from "../context/AuthProvider";
 
 function Signup() {
-  const location = useLocation();
-  const { setAuthUser, setToken } = useAuth();
-  const navigate = useNavigate();
-  const from = location.state?.from?.pathname || "/";
-
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
@@ -23,15 +19,13 @@ function Signup() {
       password: data.password,
     };
     await axios
-      .post(`${import.meta.env.VITE_API_URL}/user/signup`, userInfo)
+      .post(`${API}/user/signup`, userInfo)
       .then((res) => {
         console.log(res.data);
         if (res.data) {
-          toast.success("Signup Successfully");
-          setAuthUser(res.data.user);
-          setToken(res.data.token);
-          localStorage.setItem("Users", JSON.stringify(res.data.user));
-          navigate(from, { replace: true });
+          toast.success("Signup Successfully, please login");
+          reset();
+          document.getElementById("my_modal_3").showModal();
         }
       })
       .catch((err) => {

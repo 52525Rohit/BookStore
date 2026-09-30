@@ -7,7 +7,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import useCart from "../hooks/useCart";
 
-const API = import.meta.env.VITE_API_URL;
+import { API } from "../api";
 
 function Checkout() {
   const { cart, loading: cartLoading, total } = useCart();

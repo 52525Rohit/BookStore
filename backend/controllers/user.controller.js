@@ -42,7 +42,6 @@ export const signup = async (req, res) => {
     await createdUser.save();
     res.status(201).json({
       message: "User created successfully",
-      token: signToken(createdUser),
       user: {
         _id: createdUser._id,
         fullname: createdUser.fullname,

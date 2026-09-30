@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 
-const API = import.meta.env.VITE_API_URL;
+import { API } from "../api";
 
 export default function useCart() {
   const [cart, setCart] = useState({ items: [] });

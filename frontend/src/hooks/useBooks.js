@@ -1,3 +1,4 @@
+import { API } from "../api";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -10,7 +11,7 @@ export default function useBooks(filterFn) {
     let active = true;
     const getBooks = async () => {
       try {
-        const res = await axios.get(`${import.meta.env.VITE_API_URL}/book`);
+        const res = await axios.get(`${API}/book`);
         if (!active) return;
         setBooks(filterFn ? res.data.filter(filterFn) : res.data);
       } catch (err) {

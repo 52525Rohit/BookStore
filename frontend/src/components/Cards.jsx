@@ -1,3 +1,4 @@
+import { API } from "../api";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +15,7 @@ function Card({ item }) {
       return;
     }
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/cart/add`, {
+      await axios.post(`${API}/cart/add`, {
         bookId: item._id,
         quantity: 1,
       });

@@ -1,3 +1,4 @@
+import { API } from "../api";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
@@ -23,7 +24,7 @@ function Login() {
       password: data.password,
     };
     await axios
-      .post(`${import.meta.env.VITE_API_URL}/user/login`, userInfo)
+      .post(`${API}/user/login`, userInfo)
       .then((res) => {
         console.log(res.data);
         if (res.data) {

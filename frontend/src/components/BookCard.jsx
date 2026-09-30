@@ -1,3 +1,4 @@
+import { API } from "../api";
 import React from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -17,7 +18,7 @@ function BookCard({ item }) {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/cart/add`,
+        `${API}/cart/add`,
         { bookId: book._id },
       );
 

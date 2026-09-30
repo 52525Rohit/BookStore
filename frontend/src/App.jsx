@@ -1,6 +1,6 @@
 import Home from "./Home/Home";
 
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Link, Navigate, Route, Routes } from "react-router-dom";
 import Courses from "./Courses/Courses";
 import Signup from "./components/Signup";
 import Contact from "./components/Contact";
@@ -44,6 +44,18 @@ function App() {
           <Route
             path="/orders/:orderId"
             element={authUser ? <OrderConfirmation /> : <Navigate to="/signup" />}
+          />
+          <Route
+            path="*"
+            element={
+              <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+                <h1 className="text-4xl font-bold">404</h1>
+                <p>Page not found</p>
+                <Link to="/" className="underline text-blue-600 dark:text-blue-400">
+                  Go Home
+                </Link>
+              </div>
+            }
           />
         </Routes>
         <Toaster className="dark:bg-slate-900 dark:text-white" />
